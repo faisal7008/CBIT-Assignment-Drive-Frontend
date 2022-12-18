@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   deleteSubmission,
-  getSubmissions,
   reset,
 } from "../../features/submissions/submissionSlice";
 
@@ -30,16 +29,6 @@ export default function FinishedAssignments(props) {
   const handleDelete = (id) => {
     dispatch(deleteSubmission(id));
     dispatch(reset());
-  };
-
-  const SuccessContainer = () => {
-    return (
-      <Alert color="success">
-        <span>
-          <span className="font-medium">Success!</span> {msg}
-        </span>
-      </Alert>
-    );
   };
 
   return (

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getCourses } from "../../features/courses/courseSlice";
-import { getSubmissions } from "../../features/submissions/submissionSlice";
 import SubmissionCard from "./SubmissionCard";
 
 export default function PendingAssignments(props) {
