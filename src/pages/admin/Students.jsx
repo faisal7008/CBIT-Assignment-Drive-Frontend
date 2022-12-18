@@ -1,5 +1,4 @@
-import AdminNavbar from "../../components/Admin";
-import { MDBSpinner } from "mdb-react-ui-kit";
+
 import { useSelector, useDispatch } from "react-redux";
 import { getStudents, deleteUser, reset } from "../../features/users/userSlice";
 import { useEffect } from "react";

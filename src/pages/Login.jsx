@@ -191,7 +191,7 @@ export default function Login() {
                     aria-hidden="true"
                   />
                 </span>
-                {isLoading ? <Spinner aria-label="Default status example" /> :  "Sign in"}
+                {isLoading ? <Spinner className="bg-white" color={'white'} aria-label="Default status example" /> :  "Sign in"}
               </button>
             </div>
 
