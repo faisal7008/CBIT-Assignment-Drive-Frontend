@@ -1,22 +1,16 @@
-import AdminNavbar from "../../components/Admin";
-import { MDBSpinner } from "mdb-react-ui-kit";
+
 import { useSelector, useDispatch } from "react-redux";
-import { getStudents, deleteUser, reset, getTeachers } from "../../features/users/userSlice";
+import { getTeachers } from "../../features/users/userSlice";
 import {
   getCourses,
 } from "../../features/courses/courseSlice";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import moment from "moment";
-import { Spinner } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 import ClassCard from "./ClassCard";
 import { deleteClass, getClasses } from "../../features/classes/classSlice";
 
 export default function Classes() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
-  const { courses } = useSelector((state) => state.courses);
   const { classes } = useSelector((state) => state.classes);
   const { teachers } = useSelector((state) => state.users);
   const [isShown, setIsShown] = useState(false)

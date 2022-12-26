@@ -1,11 +1,9 @@
-import AdminNavbar from "../../components/Admin";
-import { MDBSpinner } from "mdb-react-ui-kit";
+
 import { useSelector, useDispatch } from "react-redux";
 import { getStudents, deleteUser, reset } from "../../features/users/userSlice";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { Spinner } from "flowbite-react";
 
 export default function Students() {
   const dispatch = useDispatch();
