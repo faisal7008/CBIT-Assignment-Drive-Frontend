@@ -2,7 +2,8 @@ import axios from 'axios'
 
 // const API_URL = 'http://localhost:8084/api/classes/'
 
-const API_URL = 'https://wild-teal-springbok-hem.cyclic.app/api/classes/'
+// const API_URL = 'https://wild-teal-springbok-hem.cyclic.app/api/classes/'
+const API_URL = 'https://cbit-assignment-drive-backendapi.up.railway.app/api/classes/'
 
 // Create new goal
 const addClass = async (ClassData, token) => {
