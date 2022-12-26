@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8084/api/assignments/";
+// const API_URL = "http://localhost:8084/api/assignments/";
+
+const API_URL = 'https://wild-teal-springbok-hem.cyclic.app/api/assignments/'
 
 // Create new goal
 const addAssignment = async (AssignmentData, token) => {
