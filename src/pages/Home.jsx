@@ -1,22 +1,13 @@
 import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useSelector} from 'react-redux'
 import { useEffect } from "react";
 import MainLogo from "../assets/main-logo.png"
 import Assigment from "../assets/assignment-new.png"
 
 export default function Home() {
-
-  const navigate = useNavigate()
-  const {user} = useSelector((state) => state.auth)
-
-  useEffect(() => {
-    if(user){
-      navigate("student/dashboard")
-    }
-  },[user, navigate])
 
   return (
     <>
@@ -87,12 +78,12 @@ export default function Home() {
                         CBIT Assignment Drive
                       </h1>
                     </div>
-                    <a
-                      href="/login"
+                    <Link
+                      to="/login"
                       className="block w-full bg-gray-50 px-5 py-3 text-center font-medium text-sky-600 hover:bg-gray-100"
                     >
                       Log in
-                    </a>
+                    </Link>
                   </div>
                 </Popover.Panel>
               </Transition>

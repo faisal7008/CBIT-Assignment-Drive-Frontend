@@ -1,4 +1,4 @@
-import StudentNavbar from "../../components/Student";
+import TeacherNavbar from "../../components/Teacher";
 import { Spinner, Card } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -8,7 +8,7 @@ import {
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function StudentCourses() {
+export default function TeacherCourses() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -19,6 +19,9 @@ export default function StudentCourses() {
   useEffect(() => {
     if (isError) {
       console.log(message);
+    }
+    if (!user) {
+      navigate("/login");
     }
     dispatch(getCourses());
     return () => {

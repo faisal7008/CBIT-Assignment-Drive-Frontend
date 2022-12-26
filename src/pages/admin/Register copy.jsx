@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { Alert, Spinner } from "flowbite-react";
 import { LockClosedIcon, ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MainLogo from "../../assets/main-logo.png";
 import { addUser, reset } from "../../features/users/userSlice";
-import { getClasses } from "../../features/classes/classSlice";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -14,34 +13,31 @@ export default function Register() {
     email: "",
     role: "",
     class_id: "",
-    isMentor: false,
     password: "",
     confirmPassword: "",
   });
   const [error, setError] = useState(null);
-  const [msg, setMsg] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { name, id_no, email, role, class_id, isMentor, password, confirmPassword } = formData;
+  const { name, id_no, email, role, class_id, password, confirmPassword } = formData;
 
-  // const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const { users, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.users
   );
-  const {classes} = useSelector(state => state.classes)
-
 
   useEffect(() => {
-    dispatch(getClasses())
-  }, [])
-
-  useEffect(() => {
+    if (user.role !== "Admin"){
+      navigate("/")
+    }
     if (isError) {
       setError(message);
     }
-
-  }, [isError, message]);
+    if (isSuccess) {
+      navigate("/admin/dashboard");
+    }
+  }, [user, isError, isSuccess, message, navigate, dispatch, error]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -62,24 +58,11 @@ export default function Register() {
         email,
         role,
         class_id,
-        isMentor,
         password,
       };
-      // console.log(userData)
       dispatch(addUser(userData));
-      setMsg("User added successfully.")
       // dispatch(reset());
     }
-  };
-
-  const SuccessContainer = () => {
-    return (
-      <Alert color="success">
-        <span>
-          <span className="font-medium">Success!</span> {msg}
-        </span>
-      </Alert>
-    );
   };
 
   const ErrorContainer = () => {
@@ -94,13 +77,44 @@ export default function Register() {
 
   return (
     <>
-      <Link onClick={() => navigate(-1)}>
+      <a onClick={() => navigate("/admin/students")}>
         <ArrowLeftCircleIcon
           className="h-10 w-10 absolute m-4 text-sky-500 hover:text-sky-600 cursor-pointer"
           aria-hidden="true"
         />
-      </Link>
+      </a>
       <div className="flex flex-col min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        {/* <div
+          class="flex p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+          role="alert"
+        >
+          <svg
+            aria-hidden="true"
+            class="flex-shrink-0 inline w-5 h-5 mr-3"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          <span class="sr-only">Danger</span>
+          <div>
+            <span class="font-medium">
+              Ensure that these requirements are met:
+            </span>
+            <ul class="mt-1.5 ml-4 text-red-700 list-disc list-inside">
+              <li>At least 10 characters (and up to 100 characters)</li>
+              <li>At least one lowercase character</li>
+              <li>
+                Inclusion of at least one special character, e.g., ! @ # ?
+              </li>
+            </ul>
+          </div>
+        </div> */}
         <div className="w-full max-w-md space-y-8">
           <div>
             <img
@@ -110,18 +124,11 @@ export default function Register() {
               width={70}
             />
             <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Add User
+              Create New User
             </h2>
-            {/* <p className="mt-2 text-center text-sm text-gray-600">
-              Or{' '}
-              <a href="/login" className="font-medium text-sky-600 hover:text-sky-500">
-                Already Registered ?
-              </a>
-            </p> */}
           </div>
           {error ? <ErrorContainer /> : <></>}
-          {msg ? <SuccessContainer /> : <></>}
-          <form className="space-y-6" onSubmit={onSubmit}>
+          <form className="mt-4 space-y-6" onSubmit={onSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
@@ -170,10 +177,11 @@ export default function Register() {
                   placeholder="Email address"
                 />
               </div>
+
               <div>
                 <div className="flex">
                   <button
-                    className="relative block  w-1/3 text-left appearance-none rounded-none border border-r-0 border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    className="relative block w-max appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                     type="button"
                     disabled
                   >
@@ -184,7 +192,7 @@ export default function Register() {
                   </label>
                   <select
                     id="roles"
-                    className="relative block w-2/3 appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                     name="role"
                     value={role}
                     onChange={onChange}
@@ -198,35 +206,9 @@ export default function Register() {
                 </div>
               </div>
               <div>
-               {role === "Teacher" && <div className="flex">
+                <div className="flex">
                   <button
-                    className="relative block w-1/3 text-left appearance-none rounded-none border border-r-0 border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
-                    type="button"
-                    disabled
-                  >
-                    Is a Mentor?
-                  </button>
-                  <label htmlFor="roles" className="sr-only">
-                    Select an option
-                  </label>
-                  <select
-                    id="isMentor"
-                    className="relative block w-2/3 appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
-                    name="isMentor"
-                    value={isMentor}
-                    onChange={onChange}
-                    required
-                  >
-                    <option value={false}>No</option>
-                    <option value={true}>Yes</option>
-                  </select>
-                </div>}
-              </div>
-              <div>
-              {role === "Student" && 
-              <div className="flex">
-                  <button
-                    className="relative block w-1/3 text-left appearance-none rounded-none border border-r-0 border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    className="relative block w-max appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                     type="button"
                     disabled
                   >
@@ -237,18 +219,19 @@ export default function Register() {
                   </label>
                   <select
                     id="classes"
-                    className="relative block w-2/3 appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                     name="class_id"
                     value={class_id}
                     onChange={onChange}
                     required
                   >
                     <option>Choose a Class</option>
-                    {classes.map(c =>  <option value={c._id}>{c.name} </option> )}
-                    
+                    <option value="Admin">Admin </option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Student">Student</option>
                   </select>
-                </div>}
-              </div> 
+                </div>
+              </div>
               <div>
                 <label htmlFor="password" className="sr-only">
                   Password
@@ -265,7 +248,6 @@ export default function Register() {
                   placeholder="Password"
                 />
               </div>
-              
               <div>
                 <label htmlFor="password" className="sr-only">
                   Confirm Password
@@ -298,7 +280,7 @@ export default function Register() {
                 {isLoading ? (
                   <Spinner aria-label="Default status example" />
                 ) : (
-                  <>Register</>
+                  <>Add</>
                 )}
               </button>
             </div>

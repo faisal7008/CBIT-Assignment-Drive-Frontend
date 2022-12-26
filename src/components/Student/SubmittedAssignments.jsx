@@ -21,10 +21,10 @@ export default function SubmittedAssignments(props) {
       setError(message);
     }
     // dispatch(getSubmissions())
-  }, [user, isLoading, isSuccess, isError, message, dispatch, navigate])
+  }, [user, isSuccess, isError, message, dispatch, navigate])
 
   const handleDelete = (submission) => {
-    const choice = window.confirm(`Are you sure you want to remove ${submission.assignmentname}`);
+    const choice = window.confirm(`Are you sure you want to remove ${submission.assignment_id}`);
     if(choice){
       dispatch(deleteSubmission(submission._id))
       dispatch(reset())
@@ -52,7 +52,7 @@ export default function SubmittedAssignments(props) {
             moment(assignment.duedate) > moment(Date.now()) &&
             assignment.submissions.some(
               (stud) =>
-                stud.assignmentname === assignment.name &&
+                stud.assignment_id === assignment._id &&
                 stud.rollno === user.id_no
             )
         )
@@ -89,10 +89,10 @@ export default function SubmittedAssignments(props) {
                 <div className="md:flex md:justify-between" key={submission._id}>
                   <p className=" font-mono font-bold text-xl text-gray-700 dark:text-gray-400">
                     Score :{" "}
-                    {submission.allotedmarks ? submission.allotedmarks : "NA"} /{" "}
+                    {submission.alloted_marks ? submission.alloted_marks : "NA"} /{" "}
                     {assignment.totalmarks}{" "}
                   </p>
-                { submission.allotedmarks === "NA" ?
+                { submission.alloted_marks === "NA" ?
                  ( <div className="inline-flex rounded-md shadow-sm">
                     <button
                       // onClick={() => {confirm(`Are you sure you want to remove ${assignment.name}`); dispatch(deleteSubmission(submission._id)); dispatch(reset()); setMsg("Removed Assignment")}}

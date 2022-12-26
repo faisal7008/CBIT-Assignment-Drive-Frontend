@@ -71,8 +71,8 @@ export default function CourseCard() {
               height={100}
               width={70}
             />
-            <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Add New Courses here
+            <h2 className="mt-2 text-center text-3xl font-bold tracking-normal text-gray-900">
+              Add Courses here
             </h2>
           </div>
           {error ? <ErrorContainer /> : <></>}

@@ -24,9 +24,6 @@ export default function AdminCourses() {
     if (isError) {
       console.log(message);
     }
-    if (!user) {
-      navigate("/login");
-    }
     dispatch(getCourses())
     setIsShown(false)
   }, [user, navigate, isError, isSuccess, message, dispatch]);
@@ -41,13 +38,13 @@ export default function AdminCourses() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="absolute top-2/4 left-2/4">
-        <Spinner aria-label="Default status example" />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="absolute top-2/4 left-2/4">
+  //       <Spinner aria-label="Default status example" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -56,17 +53,17 @@ export default function AdminCourses() {
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             Courses
           </h1>
-          <a
-              className="text-white bg-sky-700 hover:bg-sky-800 focus:outline-none focus:ring-4 focus:ring-sky-300 font-medium rounded-full text-sm px-3.5 py-2.5 transition-all text-center mr-2 mb-2 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
+          <button
+              className="text-white bg-sky-700 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-300 font-medium rounded-full text-sm p-2.5 px-3 transition-all text-center mr-2 mb-2"
               // href="./courses"
               onClick={() => setIsShown((current) => !current)}
             >
-              {isShown ? <i class="fas fa-times fa-lg"></i> : "Add New Course"}
-            </a>
+              {isShown ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg> : "Add a Course"}
+            </button>
         </div>
       </header>
       <main className="min-h-screen">
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8">
           <div className={isShown ? "block" : "hidden"}><CourseCard/></div>
           <div className="px-4 py-6 sm:px-0">
             <div className="grid sm:grid-cols-2 gap-2 min-w-full">
@@ -75,9 +72,10 @@ export default function AdminCourses() {
                   key={course._id}
                   horizontal={true}
                   // imgSrc="https://flowbite.com/docs/images/blog/image-4.jpg"
-                >
+                > 
+                <div className="relative">
                   <button
-                    className="relative flex -mt-2 -mb-7 justify-end"
+                    className="absolute right-0 top-0"
                     onClick={() => handleDelete(course)}
                   >
                     <div className="p-1 rounded-full bg-transparent transition-all hover:bg-slate-300 dark:text-white dark:hover:bg-gray-600">
@@ -98,12 +96,13 @@ export default function AdminCourses() {
                     </div>
                   </button>
 
-                  <h5 className="text-2xl w-full font-bold tracking-tight text-gray-900 dark:text-white">
+                  <h5 className="text-2xl w-full pr-8 font-bold tracking-tight text-gray-900 dark:text-white">
                     {course.name}
                   </h5>
                   <p className="font-normal w-full text-gray-700 dark:text-gray-400">
                     {course.semester}th semester
                   </p>
+                  </div>
                 </Card>
               ))}
             </div>

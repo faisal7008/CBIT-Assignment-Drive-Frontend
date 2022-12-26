@@ -29,14 +29,7 @@ export default function AdminProfile() {
     if (isError) {
       setError(message);
     }
-    if (!user) {
-      navigate("/login");
-    }
-    if (isSuccess) {
-      dispatch(logout());
-      navigate("/login");
-    }
-  }, [user, navigate, isError, isSuccess, isLoading, message, dispatch]);
+  }, [navigate, isError, isSuccess, message, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -106,7 +99,7 @@ export default function AdminProfile() {
         </div>
       </header>
       <main>
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8">
           <div className="flex justify-center px-4 py-6 sm:px-0">
             <div className=" w-full md:w-4/5 lg:w-3/5 m-4 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
               <div className="flex flex-col items-center p-10">

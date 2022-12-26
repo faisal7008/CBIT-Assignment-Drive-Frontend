@@ -7,10 +7,12 @@ import {
 } from "../../features/courses/courseSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function TeacherCourses() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [myCourses, setMyCourses] = useState([])
   const { user } = useSelector((state) => state.auth);
   const { courses, isLoading, isError, message } = useSelector(
     (state) => state.courses
@@ -20,30 +22,22 @@ export default function TeacherCourses() {
     if (isError) {
       console.log(message);
     }
-    if (!user) {
-      navigate("/login");
-    }
     dispatch(getCourses());
-    return () => {
-      dispatch(reset());
-    };
   }, [user, navigate, isError, message, dispatch]);
 
-  if (isLoading) {
-    return <Spinner aria-label="Default status example" />;
-  }
+  
 
   return (
     <>
        <header className="bg-white shadow">
           <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              My Courses
+              My Class
             </h1>
           </div>
         </header>
       <main className="min-h-screen">
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <div className="grid sm:grid-cols-2 gap-2 min-w-full">
               {courses.map((course) => (

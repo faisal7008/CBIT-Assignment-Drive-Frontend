@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Alert, Spinner } from "flowbite-react";
 import { LockClosedIcon, ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MainLogo from "../assets/main-logo.png";
 import { addUser, reset } from "../features/users/userSlice";
 
@@ -12,6 +12,7 @@ export default function UserRegister() {
     id_no: "",
     email: "",
     role: "",
+    isMentor: false,
     password: "",
     confirmPassword: "",
   });
@@ -19,7 +20,7 @@ export default function UserRegister() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { name, id_no, email, role, password, confirmPassword } = formData;
+  const { name, id_no, email, role, isMentor, password, confirmPassword } = formData;
 
   // const { user } = useSelector((state) => state.auth);
   const { users, isLoading, isSuccess, isError, message } = useSelector(
@@ -30,10 +31,7 @@ export default function UserRegister() {
     if (isError) {
       setError(message);
     }
-    if (isSuccess) {
-      navigate("/login");
-    }
-  }, [users, isError, isSuccess, message, navigate, dispatch, error]);
+  }, [isError, message]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -53,8 +51,10 @@ export default function UserRegister() {
         id_no,
         email,
         role,
+        isMentor,
         password,
       };
+      // console.log(userData)
       dispatch(addUser(userData));
       dispatch(reset());
     }
@@ -72,12 +72,12 @@ export default function UserRegister() {
 
   return (
     <>
-      <a onClick={() => navigate("/admin/students")}>
+      <Link onClick={() => navigate(-1)}>
         <ArrowLeftCircleIcon
           className="h-10 w-10 absolute m-4 text-sky-500 hover:text-sky-600 cursor-pointer"
           aria-hidden="true"
         />
-      </a>
+      </Link>
       <div className="flex flex-col min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
           <div>
@@ -88,14 +88,14 @@ export default function UserRegister() {
               width={70}
             />
             <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Register Your Account
+              Add User
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            {/* <p className="mt-2 text-center text-sm text-gray-600">
               Or{' '}
               <a href="/login" className="font-medium text-sky-600 hover:text-sky-500">
                 Already Registered ?
               </a>
-            </p>
+            </p> */}
           </div>
           {error ? <ErrorContainer /> : <></>}
           <form className="space-y-6" onSubmit={onSubmit}>
@@ -147,11 +147,10 @@ export default function UserRegister() {
                   placeholder="Email address"
                 />
               </div>
-
               <div>
                 <div className="flex">
                   <button
-                    className="relative block w-max appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    className="relative block  w-1/3 text-left appearance-none rounded-none border border-r-0 border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                     type="button"
                     disabled
                   >
@@ -162,7 +161,7 @@ export default function UserRegister() {
                   </label>
                   <select
                     id="roles"
-                    className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    className="relative block w-2/3 appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                     name="role"
                     value={role}
                     onChange={onChange}
@@ -175,6 +174,32 @@ export default function UserRegister() {
                   </select>
                 </div>
               </div>
+              <div>
+               {role === "Teacher" && <div className="flex">
+                  <button
+                    className="relative block w-1/3 text-left appearance-none rounded-none border border-r-0 border-gray-300 px-3 py-2 text-gray-500 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    type="button"
+                    disabled
+                  >
+                    Is a Mentor?
+                  </button>
+                  <label htmlFor="roles" className="sr-only">
+                    Select an option
+                  </label>
+                  <select
+                    id="isMentor"
+                    className="relative block w-2/3 appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 focus:z-10 focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                    name="isMentor"
+                    value={isMentor}
+                    onChange={onChange}
+                    required
+                  >
+                    <option value={false}>No</option>
+                    <option value={true}>Yes</option>
+                  </select>
+                </div>}
+              </div>
+              
               <div>
                 <label htmlFor="password" className="sr-only">
                   Password
@@ -191,6 +216,7 @@ export default function UserRegister() {
                   placeholder="Password"
                 />
               </div>
+              
               <div>
                 <label htmlFor="password" className="sr-only">
                   Confirm Password

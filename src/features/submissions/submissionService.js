@@ -1,8 +1,6 @@
 import axios from "axios";
 
-// const API_URL = "http://localhost:8084/api/submissions/";
-
-const API_URL = 'https://wild-teal-springbok-hem.cyclic.app/api/submissions/'
+const API_URL = "http://localhost:8084/api/submissions/";
 
 // Create new goal
 const addSubmission = async (SubmissionData, token) => {
@@ -14,7 +12,6 @@ const addSubmission = async (SubmissionData, token) => {
   };
 
   const response = await axios.post(API_URL, SubmissionData, config);
-
   return response.data;
 };
 
@@ -38,7 +35,7 @@ const updateSubmission = async (SubmissionId, submissionData, token) => {
       Authorization: `Bearer ${token}`
     },
   };
-
+  console.log(submissionData)
   const response = await axios.put(API_URL + SubmissionId, submissionData, config);
 
   return response.data;

@@ -6,6 +6,7 @@ import {
   addAssignment,
   reset,
 } from "../../features/assignments/assignmentSlice";
+import {getClasses} from "../../features/classes/classSlice"
 import { sendAssignmentEmail } from "../../utils/Mailer";
 import { getStudents } from "../../features/users/userSlice"
 import moment from "moment";
@@ -14,6 +15,7 @@ export default function CreateAssignment(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { courses, user, assignments } = props;
+  const {classes} = useSelector(state => state.classes)
   const { isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.assignments
   );
@@ -22,20 +24,23 @@ export default function CreateAssignment(props) {
     name: "",
     username: "",
     course: "",
+    classId: "",
     marks: "",
     duedate: "",
   });
-  const { name, course, marks, duedate } = formData;
+  const { name, course, marks, duedate, classId } = formData;
   const [selectedFile, setSelectedFile] = useState("");
   const [error, setError] = useState(null);
   const [msg, setMsg] = useState(null);
+  const [myCourses, setMyCourses] = useState([])
 
   useEffect(() => {
     if (isError) {
       setError(message);
     }
     dispatch(getStudents())
-  }, [navigate, dispatch, assignments, isSuccess, isError, message]);
+    dispatch(getClasses())
+  }, [navigate, dispatch,classId,  isSuccess, isError, message]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -44,11 +49,11 @@ export default function CreateAssignment(props) {
     }));
   };
 
-  // const sendingMailsToStudents = async (assignmentData) => {
-  //   students.map((stud) => {
-  //     sendAssignmentEmail(stud.name, stud.email, assignmentData.createdBy, assignmentData.name, assignmentData.totalmarks, moment(assignmentData.duedate).format("lll"));
-  //   })
-  // }
+  const sendingMailsToStudents = async (assignmentData) => {
+    students.map((stud) => {
+      sendAssignmentEmail(stud.name, stud.email, assignmentData.createdBy, assignmentData.name, assignmentData.totalmarks, moment(assignmentData.duedate).format("lll"));
+    })
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -56,26 +61,20 @@ export default function CreateAssignment(props) {
       name,
       createdBy: user.name,
       course,
+      classId,
       totalmarks: marks,
       duedate,
       question: selectedFile,
     };
+    // console.log(assignmentData);
     dispatch(addAssignment(assignmentData));
-    dispatch(reset());
+    // dispatch(reset());
     if (isSuccess && !isError) {
       setMsg("Assignment created successfully!");
     }
-    // sendingMailsToStudents(assignmentData);
+    sendingMailsToStudents(assignmentData);
     
   };
-
-  if (isLoading) {
-    return (
-      <div className="absolute top-2/4 left-2/4">
-        <Spinner aria-label="Default status example" />
-      </div>
-    );
-  }
 
   const ErrorContainer = () => {
     return (
@@ -122,7 +121,7 @@ export default function CreateAssignment(props) {
               type="text"
               id="text"
               name="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
               value={name}
               onChange={onChange}
               required
@@ -139,7 +138,7 @@ export default function CreateAssignment(props) {
               type="text"
               id="text"
               name="marks"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
               value={marks}
               onChange={onChange}
               required
@@ -148,22 +147,45 @@ export default function CreateAssignment(props) {
           <div className="mb-6">
             <div id="select">
               <div className="mb-2 block">
+                <Label htmlFor="classes" value="Select your class" />
+              </div>
+              <select
+                id="classes"
+                name="classId"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
+                value={classId}
+                onChange={onChange}
+                required={true}
+              >
+                <option>Select your Class</option>
+                {classes.map((c) => (
+                  <option onClick={() => setMyCourses(c.courses)} key={c._id} value={c._id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="mb-6">
+            <div id="select">
+              <div className="mb-2 block">
                 <Label htmlFor="courses" value="Select your course" />
               </div>
-              <Select
+              <select
                 id="courses"
                 name="course"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5"
                 value={course}
                 onChange={onChange}
                 required={true}
               >
                 <option>Select your Course</option>
-                {courses.map((course) => (
-                  <option key={course._id} value={course.name}>
-                    {course.name}
+                {myCourses?.map((course) => (
+                  <option className=" text-slate-900" key={course} value={course}>
+                    {course}
                   </option>
                 ))}
-              </Select>
+              </select>
             </div>
           </div>
           <div className="mb-6">
@@ -174,7 +196,7 @@ export default function CreateAssignment(props) {
               Upload Assignment Questions
             </label>
             <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full"
               id="file_input"
               type="file"
               onChange={(e) => setSelectedFile(e.target.files[0])}
@@ -193,7 +215,7 @@ export default function CreateAssignment(props) {
             <input
               type="datetime-local"
               name="duedate"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 datepicker-input"
               placeholder="Select date"
               value={duedate}
               onChange={onChange}
@@ -201,7 +223,7 @@ export default function CreateAssignment(props) {
           </div>
           <button
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
           >
             Create
           </button>

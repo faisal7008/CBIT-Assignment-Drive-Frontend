@@ -1,3 +1,4 @@
+import { Alert } from "flowbite-react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,33 +12,76 @@ export default function Submissions(props) {
   const { submissions, isSuccess } = props;
   const [marks, setMarks] = useState("NA");
   const [feedback, setFeedback] = useState("")
-  const [studentId, setStudentId] = useState(-1);
+  const [submissionId, setSubmissionId] = useState(-1);
+  const [msg, setMsg] = useState("")
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    
-  }, [isSuccess])
+    if(msg){
+      setTimeout(() => {
+        setMsg("")
+      }, 5000);
+    }
+  }, [msg])
   
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // console.log(studentId);
-    const studentData = {
-      id: studentId,
-      updatedData: {
-        allotedmarks: marks,
+    // console.log(submissionId);
+    // const studentData = {
+    //   id: submissionId,
+    //   updatedData: {
+    //     alloted_marks: marks,
+    //     feedback: feedback,
+    //   },
+    // };
+    // console.log({submissionId: submissionId, submissionData: {
+    //   alloted_marks: marks,
+    //   feedback: feedback,
+    // }})
+    console.log(marks, feedback);
+    if(marks !== "NA" && feedback !== ""){
+      dispatch(updateSubmission({submissionId: submissionId, submissionData: {
+        alloted_marks: marks,
         feedback: feedback,
-      },
-    };
-    dispatch(updateSubmission(studentData));
-    dispatch(reset());
-    navigate(0);
+      }}));
+      // if(isSuccess ){
+        setMsg("Updated Marks and Feedback.")
+      // }
+    } 
+     if(marks !== "NA" && feedback === ""){
+      dispatch(updateSubmission({submissionId: submissionId, submissionData: {
+        alloted_marks: marks
+      }}));
+      // if(isSuccess ){
+        setMsg("Updated Marks.")
+      // }
+    } 
+     if(marks === "NA" && feedback !== ""){
+      dispatch(updateSubmission({submissionId: submissionId, submissionData: {
+        feedback: feedback,
+      }}));
+      // if(isSuccess ){
+        setMsg("Updated Feedback.")
+      // }
+    }
+  };
+
+  const SuccessContainer = () => {
+    return (
+      <Alert color="success">
+        <span>
+          <span className="font-medium">Success!</span> {msg}
+        </span>
+      </Alert>
+    );
   };
 
   return (
     <>
-      <div className="overflow-x-auto mt-4 relative shadow-md sm:rounded-lg">
+      <div className="mt-2"> {msg && <SuccessContainer/>} </div>
+      <div className="overflow-x-auto mt-3 relative shadow-md sm:rounded-lg">
       <form onSubmit={onSubmit}>
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
@@ -60,6 +104,9 @@ export default function Submissions(props) {
               <th scope="col" className="py-3 px-6">
                 Feedback
               </th>
+              <th scope="col" className="py-3 px-6 bg-gray-50 dark:bg-gray-800">
+                Edit
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -75,7 +122,7 @@ export default function Submissions(props) {
                   {stud.rollno}
                 </th>
                 <td className="py-4 px-6">
-                  {stud.name}
+                  {stud.stud_name}
                 </td>
                 <td className="py-4 px-6 bg-gray-50 dark:bg-gray-800">
                   <a
@@ -94,16 +141,15 @@ export default function Submissions(props) {
                       <input
                         type="text"
                         id="small_outlined"
-                        name="allotedmarks"
+                        name="alloted_marks"
                         onChange={(e) => {
-                          setStudentId(stud._id);
-                          if (feedback === "") {
-                            setFeedback(stud.feedback);
-                          }
+                          setSubmissionId(stud._id);
+                          // if(feedback === ""){
+                          //   setMarks(stud.feedback)
+                          // }
                           setMarks(e.target.value);
-                          
                         }}
-                        defaultValue={stud.allotedmarks}
+                        defaultValue={stud.alloted_marks}
                         className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       />
                       <label
@@ -123,13 +169,12 @@ export default function Submissions(props) {
                         id="small_outlined"
                         name="feedback"
                         onChange={(e) => {
-                          setStudentId(stud._id);
-                          if (marks === "NA") {
-                            setMarks(stud.marks);
-                          }
+                          setSubmissionId(stud._id);
+                          // if (marks === "NA") {
+                          //   setMarks(stud.alloted_marks);
+                          // }
                           setFeedback(e.target.value);
                         }}
-                        on
                         defaultValue={stud.feedback}
                         className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       />
@@ -140,8 +185,10 @@ export default function Submissions(props) {
                         Feedback
                       </label>
                     </div>
-                    <button className="absolute right-8 -mt-8" type="submit">
-                      <i className="fas fa-paper-plane"></i>
+                </td>
+                <td className="py-4 px-6 bg-gray-50 dark:bg-gray-800">
+                    <button className="" type="submit">
+                      <i className="fas fa-paper-plane fa-lg"></i>
                     </button>
                 </td>
               </tr>

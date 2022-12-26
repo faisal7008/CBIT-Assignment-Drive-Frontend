@@ -12,9 +12,6 @@ export default function StudentDashboard() {
   const { submissions } = useSelector((state) => state.submissions);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
     // console.log(submissions.length)
     dispatch(getSubmissions());
   }, [user, dispatch, navigate]);
@@ -75,7 +72,7 @@ export default function StudentDashboard() {
         </div>
       </header>
       <main className="min-h-screen">
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl py-4 sm:px-6 lg:px-8">
           <div>
             <div className="grid grid-cols-1 mx-2 gap-6 md:grid-cols-2">
               <Chart

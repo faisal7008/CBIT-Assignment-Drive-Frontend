@@ -50,10 +50,11 @@ export const getSubmissions = createAsyncThunk(
 // Update submission
 export const updateSubmission = createAsyncThunk(
   'submissions/update',
-  async (submissionData, thunkAPI) => {
+  async ({submissionId, submissionData}, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await submissionService.updateSubmission(submissionData.id, submissionData.updatedData, token)
+      
+      return await submissionService.updateSubmission(submissionId, submissionData, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -99,7 +100,7 @@ export const submissionSlice = createSlice({
       .addCase(addSubmission.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.submissions.push(action.payload)
+        state.submissions.submissions.push(action.payload)
       })
       .addCase(addSubmission.rejected, (state, action) => {
         state.isLoading = false
@@ -125,7 +126,8 @@ export const submissionSlice = createSlice({
       .addCase(updateSubmission.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.submissions = action.payload
+        // state.submissions = state.submissions.submissions.filter((submission) => submission._id !== action.payload.id)
+        // state.submissions.submissions.push(action.payload)
       })
       .addCase(updateSubmission.rejected, (state, action) => {
         state.isLoading = false

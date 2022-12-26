@@ -31,6 +31,7 @@ import Admin from "./components/Admin"
 import Student from "./components/Student";
 import Teacher from "./components/Teacher";
 import UserRegister from "./pages/UserRegister";
+import Classes from "./pages/admin/Classes";
 
 const AdminLayout = () => (
   <div>
@@ -91,6 +92,14 @@ function App() {
                     courses={true}
                   />
               } />
+              <Route
+                path="classes"
+                element={
+                    <Admin
+                      AdminComponent={<Classes />}
+                      classes={true}
+                    />
+                } />
             <Route
               path="students"
               element={
@@ -187,7 +196,7 @@ function App() {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<UserRegister />} />
+            {/* <Route path="/register" element={<UserRegister />} /> */}
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

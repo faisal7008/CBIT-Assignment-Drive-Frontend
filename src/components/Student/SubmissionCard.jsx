@@ -37,33 +37,34 @@ export default function SubmissionCard(props) {
     e.preventDefault();
     
     const submissionData = {
-      name: user.name,
+      stud_name: user.name,
       rollno: user.id_no,
-      assignmentname: assignment.name,
+      assignment_id: assignment._id,
       answer: selectedFile,
     };
     try {
       dispatch(addSubmission(submissionData));
+      // console.log(submissionData);
       setMsg("Assignment Submitted!");
       // window.location.reload()
     } catch (error) {
       setError(error.message)
     }
-    dispatch(reset())
+    // dispatch(reset())
     // if (isSuccess && !isError) {
     //   setMsg("Assignment Submitted!");
     // }
-    // sendSubmissionEmail(user.name, user.email, `You've successfully submitted ${submissionData.assignmentname}`);
+    sendSubmissionEmail(user.name, user.email, `You've successfully submitted ${assignment.name}`);
   };
 
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center">
-        <Spinner aria-label="Default status example" />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex justify-center items-center">
+  //       <Spinner aria-label="Default status example" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>

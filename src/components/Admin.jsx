@@ -12,13 +12,10 @@ export default function Admin(props) {
   );
 
   useEffect(() => {
-    if (user && isSuccess) {
-      navigate("/");
-    }
     if (user.role !== "Admin") {
       navigate("/login");
     }
-  }, [user, isSuccess, isLoading, isError, message, navigate, dispatch]);
+  }, [user, navigate, dispatch]);
 
   const onLogout = () => {
     dispatch(logout());
@@ -29,6 +26,7 @@ export default function Admin(props) {
   const navigation = [
     { name: "Dashboard", href: "/admin/dashboard", current: props.dashboard },
     { name: "Courses", href: "/admin/courses", current: props.courses },
+    { name: "Classes", href: "/admin/classes", current: props.classes },
     { name: "Students", href: "/admin/students", current: props.students },
     { name: "Teachers", href: "/admin/teachers", current: props.teachers },
   ];

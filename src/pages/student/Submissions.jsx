@@ -18,9 +18,6 @@ export default function StudentSubmissions() {
   );
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
     dispatch(getCourses());
     dispatch(getSubmissions());
   }, [user, navigate, dispatch]);
@@ -40,7 +37,7 @@ export default function StudentSubmissions() {
         <div className="alerts absolute w-5/6 md:w-2/6 -mt-16 left-1/3">
           {/* {isError && <AlertContainer />} */}
         </div>
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8">
           <div className="px-4 py-3 sm:px-0">
             <Tabs.Group aria-label="tabs with underline" style="underline">
               <Tabs.Item title="Pending Assignments" 

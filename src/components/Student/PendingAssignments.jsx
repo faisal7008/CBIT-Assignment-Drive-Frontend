@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getCourses } from "../../features/courses/courseSlice";
+import { getSubmissions } from "../../features/submissions/submissionSlice";
 import SubmissionCard from "./SubmissionCard";
 
 export default function PendingAssignments(props) {
@@ -18,9 +19,6 @@ export default function PendingAssignments(props) {
   const [selectedAssignment, setSelectedAssignment] = useState({});
 
   useEffect(() => {
-    if(isSuccess){
-      setMsg("Assignment Submitted.")
-    }
     dispatch(getCourses());
     // dispatch(getSubmissions());
   }, [user, navigate, dispatch]);
@@ -29,7 +27,7 @@ export default function PendingAssignments(props) {
     if (
       assignment.submissions.some(
         (stud) =>
-          stud.assignmentname === assignment.name && stud.rollno === user.id_no
+          stud.assignment_id === assignment._id && stud.rollno === user.id_no
       )
     ) {
       return true;
@@ -59,6 +57,13 @@ export default function PendingAssignments(props) {
       return <></>;
     }
   };
+
+  const pendingAssignments = submissions
+  .filter(
+    (assignment) =>
+      moment(assignment.duedate) > moment(Date.now()) &&
+       !checkIfAlreadySubmitted(assignment)
+  )
   
   return (
     <div>
@@ -71,12 +76,7 @@ export default function PendingAssignments(props) {
         id="assignments_container"
         className=" grid w-2/5 rounded-l-lg dark:bg-gray-800 overflow-auto"
       >
-        {submissions
-          .filter(
-            (assignment) =>
-              moment(assignment.duedate) > moment(Date.now()) &&
-               !checkIfAlreadySubmitted(assignment)
-          )
+        {pendingAssignments.length > 0 ? pendingAssignments
           .map((assignment) => (
             <div
               className={
@@ -106,7 +106,7 @@ export default function PendingAssignments(props) {
                 </h5>
               </div>
             </div>
-          ))}
+          )) : <div className="flex justify-center items-center p-6 max-w-full  bg-gray-200 rounded-none border border-gray-200 shadow-md hover:bg-gray-100"><p className=" font-semibold text-lg"> No pending assignments </p></div>}
       </div>
       <div className="w-3/5 h-full dark:text-white">
         <SubmissionCard assignment={selectedAssignment} msg={msg} setMsg={setMsg}/>

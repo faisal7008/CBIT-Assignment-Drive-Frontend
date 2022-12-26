@@ -2,7 +2,7 @@ import { LockClosedIcon, ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
 import { useState, useEffect } from "react";
 import { Alert, Spinner } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login, reset } from "../features/auth/authSlice";
 import MainLogo from "../assets/main-logo.png";
 
@@ -27,7 +27,7 @@ export default function Login() {
     if (isError) {
       setError(message);
     }
-    if (isSuccess && user) {
+    if (user) {
       if (user.role === "Admin"){
         navigate("/admin/dashboard");
       }
@@ -39,8 +39,8 @@ export default function Login() {
       }
     }
 
-    dispatch(reset());
-  }, [user, isError, isSuccess, message, msg, navigate, dispatch]);
+    // dispatch(reset());
+  }, [user, isError, isSuccess, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -70,26 +70,16 @@ export default function Login() {
     );
   };
 
-  const SuccessContainer = () => {
-    return (
-      <Alert color="success">
-        <span>
-          <span className="font-medium">Success!</span> {msg}
-        </span>
-      </Alert>
-    );
-  };
-
   return (
     <>
-      <a href="/">
+      <Link to="/">
         <ArrowLeftCircleIcon
           className="h-10 w-10 absolute m-4 text-sky-500 hover:text-sky-600"
           aria-hidden="true"
         />
-      </a>
+      </Link>
       <div className="flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-4">
           <div>
             {/* <img
               className="mx-auto h-12 w-auto"
@@ -105,18 +95,17 @@ export default function Login() {
             /><h2 className="mt-2 text-center text-4xl font-bold tracking-tight text-slate-700">
             CBIT Assignment Drive
           </h2>
-            <h2 className="mt-3 mb-3 text-center text-3xl font-bold tracking-tight text-gray-900">
+            <h2 className="mt-3 mb-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Sign in to your account
             </h2>
-            <p className="mb-3 text-center text-sm text-gray-600">
+            {/* <p className="mb-3 text-center text-sm text-gray-600">
               Or{' '}
-              <a href="/register" className="font-medium text-sky-600 hover:text-sky-500">
+              <Link to="/register" className="font-medium text-sky-600 hover:text-sky-500">
                 New here
-              </a>
-            </p>
-            {error ? <ErrorContainer /> : <></>}
-            {message ? <SuccessContainer /> : <></>}
+              </Link>
+            </p> */}
           </div>
+            {error ? <ErrorContainer /> : <></>}
           <form className=" space-y-6" onSubmit={onSubmit}>
             {/* <input type="hidden" name="remember" defaultValue="true" /> */}
             <div className="-space-y-px rounded-md shadow-sm">
@@ -191,7 +180,7 @@ export default function Login() {
                     aria-hidden="true"
                   />
                 </span>
-                {isLoading ? <Spinner className="bg-white" color={'white'} aria-label="Default status example" /> :  "Sign in"}
+                {isLoading ? <Spinner aria-label="Default status example" /> :  "Sign in"}
               </button>
             </div>
 

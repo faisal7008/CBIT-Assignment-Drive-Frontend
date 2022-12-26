@@ -16,9 +16,7 @@ export default function AdminDashboard() {
 
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
+  
     // console.log(submissions.length)
     dispatch(getSubmissions());
     dispatch(getTeachers())
@@ -51,7 +49,7 @@ export default function AdminDashboard() {
         </div>
       </header>
       <main className="min-h-screen">
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl py-4 sm:px-6 lg:px-8">
           <div>
             <div className="grid grid-rows-1 mx-2 gap-4 ">
               <Chart

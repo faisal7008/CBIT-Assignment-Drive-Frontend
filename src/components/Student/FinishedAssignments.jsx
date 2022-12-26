@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   deleteSubmission,
+  getSubmissions,
   reset,
 } from "../../features/submissions/submissionSlice";
 
@@ -24,11 +25,21 @@ export default function FinishedAssignments(props) {
       setError(message);
     }
     // dispatch(getSubmissions())
-  }, [user, isLoading, isSuccess, isError, message, dispatch, navigate]);
+  }, [user, isSuccess, isError, message, dispatch, navigate]);
 
   const handleDelete = (id) => {
     dispatch(deleteSubmission(id));
     dispatch(reset());
+  };
+
+  const SuccessContainer = () => {
+    return (
+      <Alert color="success">
+        <span>
+          <span className="font-medium">Success!</span> {msg}
+        </span>
+      </Alert>
+    );
   };
 
   return (
@@ -79,15 +90,15 @@ export default function FinishedAssignments(props) {
                 >
                   <p className=" font-mono font-bold text-xl text-gray-700 dark:text-gray-400">
                     Score :{" "}
-                    {submission.allotedmarks ? submission.allotedmarks : "NA"} /{" "}
+                    {submission.alloted_marks ? submission.alloted_marks : "NA"} /{" "}
                     {assignment.totalmarks}{" "}
                   </p>
-                  {submission.allotedmarks === "NA" ? (
+                  {submission.alloted_marks === "NA" ? (
                     <div className="inline-flex rounded-md shadow-sm">
                       <button
                         onClick={() => {
                           alert(
-                            `Are you sure you want to remove ${submission.assignmentname}`
+                            `Are you sure you want to remove ${assignment.name}`
                           );
                           dispatch(deleteSubmission(submission._id));
                           dispatch(reset());

@@ -12,14 +12,10 @@ export default function Student(props) {
   );
 
   useEffect(() => {
-    if (user && isSuccess) {
-      navigate("/");
-    }
     if (user.role !== "Student") {
       navigate("/login")
     }
-    
-  }, [user, isSuccess, isLoading, isError, message, navigate, dispatch]);
+  }, [user, navigate, dispatch]);
 
   const onLogout = () => {
     dispatch(logout());

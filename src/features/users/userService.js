@@ -1,10 +1,8 @@
 import axios from 'axios'
 
-// const API_URL = "http://localhost:8084/api/submissions/";
+const API_URL = 'http://localhost:8084/api/users/'
 
-const API_URL = 'https://wild-teal-springbok-hem.cyclic.app/api/submissions/'
-
-// Create new goal
+// Create new user
 const addUser = async (UserData) => {
   // const config = {
   //   headers: {

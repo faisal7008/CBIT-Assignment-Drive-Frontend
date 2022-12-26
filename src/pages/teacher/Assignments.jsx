@@ -20,19 +20,15 @@ export default function TeacherAssignments() {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { courses } = useSelector((state) => state.courses);
-  const { assignments } = useSelector(
+  const { assignments, isSuccess, isError } = useSelector(
     (state) => state.assignments
   );
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-
     dispatch(getCourses());
     dispatch(getAssignments());
     dispatch(getSubmissions());
-  }, [user, navigate, dispatch]);
+  }, [user, isError, isSuccess, navigate, dispatch]);
 
   return (
     <>
@@ -44,7 +40,7 @@ export default function TeacherAssignments() {
           </div>
         </header>
       <main className="min-h-screen">
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl py-2 sm:px-6 lg:px-5">
           <div className="px-4 py-6 sm:px-0">
             <Tabs.Group aria-label="tabs with underline" style={"underline"}>
               <Tabs.Item title="Create New Assignment">
