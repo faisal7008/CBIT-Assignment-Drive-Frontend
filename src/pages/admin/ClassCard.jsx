@@ -55,7 +55,7 @@ export default function ClassCard() {
     
   };
 
-  const filteredCourses = courses.filter(course => searchField && course.name.includes(searchField) && !myCourses.includes(course.name))
+  const filteredCourses = courses.filter(course => searchField && course.name.toLowerCase().includes(searchField.toLowerCase()) && !myCourses.includes(course.name))
 
   const ErrorContainer = () => {
     return (
