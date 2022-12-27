@@ -100,7 +100,7 @@ export const submissionSlice = createSlice({
       .addCase(addSubmission.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.submissions.submissions.push(action.payload)
+        state.submissions.push(action.payload)
       })
       .addCase(addSubmission.rejected, (state, action) => {
         state.isLoading = false
