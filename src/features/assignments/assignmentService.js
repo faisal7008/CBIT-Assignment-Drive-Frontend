@@ -13,7 +13,7 @@ const addAssignment = async (AssignmentData, token) => {
       // "Content-Type": "multipart/form-data",
     },
   };
-
+  console.log(AssignmentData)
   const response = await axios.post(API_URL, AssignmentData, config);
 
   return response.data;

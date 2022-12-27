@@ -32,7 +32,8 @@ export default function CreateAssignment(props) {
   const [selectedFile, setSelectedFile] = useState("");
   const [error, setError] = useState(null);
   const [msg, setMsg] = useState(null);
-  const [myCourses, setMyCourses] = useState([])
+  const [selectedCourse, setSelectedCourse] = useState(null)
+  const [myCourses, setMyCourses] = useState(null)
 
   useEffect(() => {
     if (isError) {
@@ -40,7 +41,12 @@ export default function CreateAssignment(props) {
     }
     dispatch(getStudents())
     dispatch(getClasses())
-  }, [navigate, dispatch,classId,  isSuccess, isError, message]);
+  }, [navigate, dispatch, isSuccess, isError, message]);
+
+  useEffect(() => {
+    classes.filter(c => c._id === selectedCourse).map(c => setMyCourses(c.courses))
+    console.log(myCourses);
+  }, [selectedCourse])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -55,8 +61,19 @@ export default function CreateAssignment(props) {
     })
   }
 
+  const onFileSelect = (e) => {
+    const reader = new FileReader()
+      reader.readAsDataURL(e.target.files[0])
+      reader.onloadend = () => {
+        setSelectedFile(reader.result)
+    }
+    console.log(selectedFile)
+  }
+
   const onSubmit = (e) => {
     e.preventDefault();
+
+    console.log(selectedFile)
     const assignmentData = {
       name,
       createdBy: user.name,
@@ -72,7 +89,7 @@ export default function CreateAssignment(props) {
     if (isSuccess && !isError) {
       setMsg("Assignment created successfully!");
     }
-    sendingMailsToStudents(assignmentData);
+    // sendingMailsToStudents(assignmentData);
     
   };
 
@@ -159,8 +176,8 @@ export default function CreateAssignment(props) {
               >
                 <option>Select your Class</option>
                 {classes.map((c) => (
-                  <option onClick={() => setMyCourses(c.courses)} key={c._id} value={c._id}>
-                    {c.name}
+                  <option key={c._id} onClick={() => setMyCourses(c.courses)} value={c._id}>
+                    <button type="button" onClick={() => setSelectedCourse(c._id)} className="p-2"> {c.name} </button>
                   </option>
                 ))}
               </select>
@@ -182,7 +199,7 @@ export default function CreateAssignment(props) {
                 <option>Select your Course</option>
                 {myCourses?.map((course) => (
                   <option className=" text-slate-900" key={course} value={course}>
-                    {course}
+                     {course}
                   </option>
                 ))}
               </select>
@@ -199,7 +216,7 @@ export default function CreateAssignment(props) {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full"
               id="file_input"
               type="file"
-              onChange={(e) => setSelectedFile(e.target.files[0])}
+              onChange={(e) => onFileSelect(e)}
               name="question"
               required
             />

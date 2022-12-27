@@ -12,7 +12,7 @@ import {sendSubmissionEmail} from "../../utils/Mailer"
 
 export default function SubmissionCard(props) {
   const { assignment, msg, setMsg } = props;
-  const [selectedFile, setSelectedFile] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   // const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
@@ -33,8 +33,18 @@ export default function SubmissionCard(props) {
     dispatch(getSubmissions());
   }, [user, isSuccess, isError, message, dispatch, navigate]);
 
+  const onFileSelect = (e) => {
+    const reader = new FileReader()
+      reader.readAsDataURL(e.target.files[0])
+      reader.onloadend = () => {
+        setSelectedFile(reader.result)
+    }
+  }
+
   const onSubmit = (e) => {
     e.preventDefault();
+
+    
     
     const submissionData = {
       stud_name: user.name,
@@ -195,7 +205,7 @@ export default function SubmissionCard(props) {
                         type="file"
                         name="answer"
                         className="hidden"
-                        onChange={(e) => setSelectedFile(e.target.files[0])}
+                        onChange={(e) => onFileSelect(e)}
                         // required
                       />
                     </form>
