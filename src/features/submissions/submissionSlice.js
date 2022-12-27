@@ -100,7 +100,7 @@ export const submissionSlice = createSlice({
       .addCase(addSubmission.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.submissions.push(action.payload)
+        state.submissions.filter(assignment => assignment._id === action.payload.assignment_id).map(assignment => assignment.submissions.push(action.payload))
       })
       .addCase(addSubmission.rejected, (state, action) => {
         state.isLoading = false
