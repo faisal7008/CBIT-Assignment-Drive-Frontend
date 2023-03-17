@@ -17,6 +17,7 @@ export default function UserRegister() {
     confirmPassword: "",
   });
   const [error, setError] = useState(null);
+  const [msg, setMsg] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -56,6 +57,7 @@ export default function UserRegister() {
       };
       // console.log(userData)
       dispatch(addUser(userData));
+      setMsg("Account created successfully.")
       dispatch(reset());
     }
   };
@@ -65,6 +67,16 @@ export default function UserRegister() {
       <Alert color="failure">
         <span>
           <span className="font-medium">Error!</span> {error}
+        </span>
+      </Alert>
+    );
+  };
+
+  const SuccessContainer = () => {
+    return (
+      <Alert color="success">
+        <span>
+          <span className="font-medium">Success!</span> {msg} <Link className=" italic font-bold" to={'/login'}> Click to Login</Link>
         </span>
       </Alert>
     );
@@ -88,16 +100,17 @@ export default function UserRegister() {
               width={70}
             />
             <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
-              Add User
+              Create a new account
             </h2>
-            {/* <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mt-2 text-center text-sm text-gray-600">
               Or{' '}
               <a href="/login" className="font-medium text-sky-600 hover:text-sky-500">
                 Already Registered ?
               </a>
-            </p> */}
+            </p>
           </div>
           {error ? <ErrorContainer /> : <></>}
+          {msg ? <SuccessContainer /> : <></>}
           <form className="space-y-6" onSubmit={onSubmit}>
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="-space-y-px rounded-md shadow-sm">

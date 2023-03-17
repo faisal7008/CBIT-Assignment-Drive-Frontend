@@ -196,7 +196,7 @@ function App() {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/register" element={<UserRegister />} /> */}
+            <Route path="/register" element={<UserRegister />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
